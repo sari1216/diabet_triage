@@ -2,7 +2,7 @@ import json
 
 import joblib
 from sklearn.datasets import load_diabetes
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LassoCV
 from sklearn.metrics import root_mean_squared_error
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
@@ -21,7 +21,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 # Skapa pipelinen med de två stegen
 pipeline = Pipeline([
     ("scaler", StandardScaler()),
-    ("regressor", LinearRegression())
+    ("regressor", LassoCV(cv=5, random_state=42))
 ])
 
 # Träna modellen (skalar X_train och tränar sedan på det)
@@ -35,7 +35,7 @@ rmse = root_mean_squared_error(y_test, y_pred)
 # 3. Skriv ut resultatet
 print("RMSE:", rmse)
 joblib.dump(pipeline, "pipeline.joblib")
-metrics = {"model_version": "v0.1", "rmse": rmse}
+metrics = {"model_version": "v0.2", "model": "LassoCV", "rmse": rmse}
 with open("metrics.json", "w") as f:
     json.dump(metrics, f, indent=2)
 
