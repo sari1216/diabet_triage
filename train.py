@@ -1,13 +1,12 @@
-import joblib
 import json
+
+import joblib
 from sklearn.datasets import load_diabetes
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import root_mean_squared_error
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import root_mean_squared_error
-from fastapi import FastAPI
-
 
 Xy = load_diabetes(as_frame=True)
 
