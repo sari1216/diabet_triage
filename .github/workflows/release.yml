@@ -38,12 +38,14 @@ jobs:
       - name: Smoke test container
         run: |
           docker run -d --name app -p 8080:80 $IMAGE
-          curl -f --retry 15 --retry-connrefused --retry-delay 1 http://localhost:8080/health
+          sleep 10
+          curl -f --retry 15 --retry-all-errors --retry-delay 2 http://localhost:8080/health
           curl -s http://localhost:8080/health | grep "$GITHUB_REF_NAME"
           curl -f -X POST http://localhost:8080/predict -H "Content-Type: application/json" -d '{"age": 0.02, "sex": -0.044, "bmi": 0.06, "bp": -0.03, "s1": -0.02, "s2": 0.03, "s3": -0.02, "s4": 0.02, "s5": 0.02, "s6": -0.001}'
           status=$(curl -s -o /dev/null -w "%{http_code}" -X POST http://localhost:8080/predict -H "Content-Type: application/json" -d '{"age": 0.02}')
           test "$status" = "422"
           docker cp app:/app/metrics.json metrics.json
+          docker logs app
 
       - name: Log in to GHCR
         uses: docker/login-action@v3
